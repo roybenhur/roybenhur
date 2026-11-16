@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Roy Ben Hur — Portfolio</title>
+  <meta name="description" content="Roy Ben Hur — Electrical Engineering student, Formal Verification at Intel, basketball enthusiast." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React, ReactDOM & Lucide UMD (No fragile importmap / esm.sh needed) -->
+  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <!-- The lucide UMD build looks for a lowercase global "react" -->
+  <script>window.react = window.React;</script>
+  <script crossorigin src="https://unpkg.com/lucide-react@0.460.0/dist/umd/lucide-react.min.js"></script>
+  <script crossorigin src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+
+  <style>
+    :root {
+      --color-primary: #e63946;
+      --color-primary-dark: #c1121f;
+      --color-secondary: #1d3557;
+      --color-secondary-light: #2a4a6e;
+      --color-accent: #f4a261;
+      --color-success: #2a9d8f;
+      --color-warning: #e9c46a;
+      --color-error: #e63946;
+      --color-neutral-50: #f8fafc;
+      --color-neutral-100: #f1f5f9;
+      --color-neutral-200: #e2e8f0;
+      --color-neutral-300: #cbd5e1;
+      --color-neutral-400: #94a3b8;
+      --color-neutral-500: #64748b;
+      --color-neutral-600: #475569;
+      --color-neutral-700: #334155;
+      --color-neutral-800: #1e293b;
+      --color-neutral-900: #0f172a;
+      --color-neutral-950: #020617;
+    }
+    * { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--color-neutral-950);
+      color: var(--color-neutral-100);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -0.02em;
+    }
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: var(--color-neutral-950); }
+    ::-webkit-scrollbar-thumb { background: var(--color-secondary-light); border-radius: 5px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    @keyframes slideInLeft { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 20px rgba(230, 57, 70, 0.3); } 50% { box-shadow: 0 0 40px rgba(230, 57, 70, 0.5); } }
+    @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
+    @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    .animate-fade-in-up { animation: fadeInUp 0.8s ease-out forwards; }
+    .animate-fade-in { animation: fadeIn 1s ease-out forwards; }
+    .animate-scale-in { animation: scaleIn 0.6s ease-out forwards; }
+    .animate-slide-in-left { animation: slideInLeft 0.8s ease-out forwards; }
+    .animate-slide-in-right { animation: slideInRight 0.8s ease-out forwards; }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    .animate-pulse-glow { animation: pulseGlow 3s ease-in-out infinite; }
+    .gradient-text {
+      background: linear-gradient(135deg, #e63946 0%, #f4a261 50%, #e63946 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 5s ease infinite;
+    }
+    .glass-card {
+      background: rgba(30, 41, 59, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+    }
+    .glass-card-hover { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .glass-card-hover:hover {
+      background: rgba(30, 41, 59, 0.7);
+      border-color: rgba(230, 57, 70, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
+    }
+    .hero-gradient {
+      background: radial-gradient(ellipse at top, rgba(29, 53, 87, 0.4) 0%, transparent 50%),
+                  radial-gradient(ellipse at bottom right, rgba(230, 57, 70, 0.15) 0%, transparent 50%),
+                  radial-gradient(ellipse at bottom left, rgba(244, 162, 97, 0.08) 0%, transparent 50%);
+    }
+    .text-shadow-lg { text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); }
+    .noise-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; opacity: 0.03; z-index: 1;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease-out, transform 0.8s ease-out; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .hover-lift { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .hover-lift:hover { transform: translateY(-6px); }
+    .image-placeholder {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%);
+      border: 2px dashed rgba(148, 163, 184, 0.2);
+      position: relative; overflow: hidden;
+    }
+    .image-placeholder::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(148, 163, 184, 0.08), transparent);
+      animation: shimmer 2.5s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+  const { useState, useEffect, useRef, useCallback } = React;
+  const { createRoot } = ReactDOM;
+  const {
+    ChevronDown, ArrowDown, Sparkles, Code, Calendar, Trophy, Coffee,
+    MapPin, GraduationCap, Cpu, Linkedin, Github, Mail, ExternalLink, Heart,
+    Camera, X, Image: ImageIcon, Play, TrendingUp, RefreshCw, AlertCircle,
+    Gamepad2, ClipboardCheck, CheckCircle2, XCircle, Lightbulb, RotateCcw,
+    ChevronRight, Trash2, Zap, Plus, CircuitBoard
+  } = window.LucideReact;
+
+  // ==================== DATA ====================
+  const deniAvdijaVideos = [
+    { id: 'deni-1', title: "Deni Avdija BEST HIGHLIGHTS 24-25 Season", thumbnail: 'https://img.youtube.com/vi/Q-1LtnqL5PM/maxresdefault.jpg', url: 'https://www.youtube.com/watch?v=Q-1LtnqL5PM', description: 'The best of Deni Avdija from the 2024-2025 season with the Portland Trail Blazers.' },
+    { id: 'deni-2', title: "Deni Avdija Highlights (Season-High 37 PTS) | Trail Blazers vs Bulls", thumbnail: 'https://img.youtube.com/vi/zmu9tZsPOg0/maxresdefault.jpg', url: 'https://www.youtube.com/watch?v=zmu9tZsPOg0', description: 'Season-high 37 points — April 4, 2025. Trail Blazers 113, Bulls 118.' },
+    { id: 'deni-3', title: "Deni Avdija Did It ALL This Season | Top Plays | 2025-26 NBA Season", thumbnail: 'https://img.youtube.com/vi/gC6KU0sb0Bo/maxresdefault.jpg', url: 'https://www.youtube.com/watch?v=gC6KU0sb0Bo', description: 'Deni Avdija took his game to another level — a true two-way force in the 2025-26 season.' },
+    { id: 'deni-4', title: "Deni Avdija Highlights (24 PTS, 5 REB) | Trail Blazers vs Jazz | Oct. 31, 2026", thumbnail: 'https://img.youtube.com/vi/jUM9sqRShcA/maxresdefault.jpg', url: 'https://www.youtube.com/watch?v=jUM9sqRShcA', description: 'Deni leads all scorers with 24 points in a Halloween win over the Jazz.' },
+  ];
+
+  const deniAvdijaInfo = {
+    fullName: 'Deni Avdija', team: 'Portland Trail Blazers', position: 'Small Forward',
+    height: '6-8 (203cm)', weight: '228 lb (103kg)', born: 'January 3, 2001 — Beit Zera, Israel',
+    draft: 'Washington Wizards, 1st round (9th pick, 2020)', nbaDebut: 'December 23, 2020',
+    experience: '7 years', instagram: '@deniavdia8', nickname: 'Turbo', espnAthleteId: 4683021,
+  };
+
+  const nbaWeeklyVideos = [
+    { id: 'nba-w5', title: "The BEST MOMENTS of Week 5 | 2025-26 NBA Season", thumbnail: 'https://img.youtube.com/vi/46_vHOCZ1q8/maxresdefault.jpg', url: 'https://www.youtube.com/watch?v=46_vHOCZ1q8', description: 'Check out the best moments of Week 5 of the 2025-26 NBA Season!' },
+    { id: 'nba-w3', title: "The BEST MOMENTS of Week 3 | 2025-26 NBA Season", thumbnail: 'https://img.youtube.com/vi/toTra6Q79l0/maxresdefault.jpg', url: 'https://www.youtube.com/watch?v=toTra6Q79l0', description: 'Luka continued his historic scoring start, Giannis called game in Indiana, and Josh Giddey joined Michael Jordan in Bulls history.' },
+    { id: 'nba-clutch', title: "The Best CLUTCH Plays & GAME-WINNERS of the 2025-26 NBA Season", thumbnail: 'https://img.youtube.com/vi/6XmWPHW9b1A/maxresdefault.jpg', url: 'https://www.youtube.com/watch?v=6XmWPHW9b1A', description: 'The most clutch plays and game-winning shots of the entire 2025-26 season.' },
+    { id: 'nba-top100', title: "Top 100 Plays of the 2026 NBA Season", thumbnail: 'https://img.youtube.com/vi/PFxWeiRTfSk/maxresdefault.jpg', url: 'https://www.youtube.com/watch?v=PFxWeiRTfSk', description: 'The top 100 plays from the entire 2025-26 NBA regular season and playoffs.' },
+  ];
+
+  const experiencePhotos = [
+    { id: 'thailand-1', title: 'Thailand with my girlfriend Ilay', description: 'Photos of my girlfriend Ilay and me from our trip to Thailand last summer.', imageUrl: 'images/thailand/IMG_8126.jpg', category: 'Thailand' },
+    { id: 'thailand-2', title: 'Thailand with my girlfriend Ilay', description: 'Photos of my girlfriend Ilay and me from our trip to Thailand last summer.', imageUrl: 'images/screenshots/Screenshot_2026-11-14_at_19.21.33.png', category: 'Thailand' },
+    { id: 'thailand-3', title: 'Thailand with my girlfriend Ilay', description: 'Photos of my girlfriend Ilay and me from our trip to Thailand last summer.', imageUrl: 'images/thailand/101.JPEG', category: 'Thailand' },
+    { id: 'thailand-4', title: 'Thailand with my girlfriend Ilay', description: 'Photos of my girlfriend Ilay and me from our trip to Thailand last summer.', imageUrl: 'images/thailand/125.JPEG', category: 'Thailand' },
+    { id: 'thailand-5', title: 'Thailand with my girlfriend Ilay', description: 'Photos of my girlfriend Ilay and me from our trip to Thailand last summer.', imageUrl: 'images/281.JPEG', category: 'Thailand' },
+    { id: 'thailand-6', title: 'Thailand with my girlfriend Ilay', description: 'Photos of my girlfriend Ilay and me from our trip to Thailand last summer.', imageUrl: 'images/לפרופיל/GPTempDownload.JPG', category: 'Thailand' },
+  ];
+
+  const socialLinks = [
+    { name: 'LinkedIn', url: 'https://www.linkedin.com/in/roy-ben-hur-00783133b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app', icon: 'linkedin', handle: 'Roy Ben Hur' },
+    { name: 'GitHub', url: 'https://github.com/roybenhur', icon: 'github', handle: 'roybenhur' },
+    { name: 'Email', url: 'mailto:roy.benhur23@gmail.com', icon: 'mail', handle: 'roy.benhur23@gmail.com' },
+  ];
+
+  const personalInfo = {
+    name: 'Roy Ben Hur',
+    tagline: 'Electrical Engineering Student · Formal Verification @ Intel · Basketball Enthusiast',
+    bio: "I'm a 4th-year Electrical Engineering student at the Technion, currently working in Formal Verification at Intel. My world lives at the intersection of logic design and digital systems- where every signal has meaning and every gate tells a story.",
+    location: 'Haifa, Israel', photo: 'images/לפרופיל.JPG', resumeUrl: '',
+  };
+
+  const quickStats = [
+    { label: 'Year of Study', value: '4th', icon: 'calendar' },
+    { label: 'Logic Gates Verified', value: '∞', icon: 'code' },
+    { label: 'Games Watched', value: '500+', icon: 'trophy' },
+    { label: 'Coffee Consumed', value: '∞', icon: 'coffee' },
+  ];
+
+  // ==================== LOGIC ENGINE ====================
+  const GATE_DEFS = {
+    AND: { type: 'AND', label: 'AND', symbol: '∧', inputs: 2, description: 'Output is 1 only when both inputs are 1' },
+    OR: { type: 'OR', label: 'OR', symbol: '∨', inputs: 2, description: 'Output is 1 when at least one input is 1' },
+    NOT: { type: 'NOT', label: 'NOT', symbol: '¬', inputs: 1, description: 'Output is the inverse of the input' },
+    NAND: { type: 'NAND', label: 'NAND', symbol: '⊼', inputs: 2, description: 'Output is 0 only when both inputs are 1 (universal gate)' },
+    NOR: { type: 'NOR', label: 'NOR', symbol: '⊽', inputs: 2, description: 'Output is 1 only when both inputs are 0 (universal gate)' },
+    XOR: { type: 'XOR', label: 'XOR', symbol: '⊕', inputs: 2, description: 'Output is 1 when inputs differ (exclusive OR)' },
+    XNOR: { type: 'XNOR', label: 'XNOR', symbol: '≡', inputs: 2, description: 'Output is 1 when inputs are equal' },
+  };
+  const GATE_ORDER = ['AND', 'OR', 'NOT', 'NAND', 'NOR', 'XOR', 'XNOR'];
+
+  function computeGate(type, inputs) {
+    const a = inputs[0] ?? 0; const b = inputs[1] ?? 0;
+    switch (type) {
+      case 'AND': return a & b; case 'OR': return a | b; case 'NOT': return a ? 0 : 1;
+      case 'NAND': return (a & b) ? 0 : 1; case 'NOR': return (a | b) ? 0 : 1;
+      case 'XOR': return a ^ b; case 'XNOR': return a === b ? 1 : 0;
+    }
+  }
+
+  function evaluateCircuit(circuit) {
+    const nodeMap = new Map(circuit.nodes.map(n => [n.id, { ...n }]));
+    const inDegree = new Map(); const adj = new Map();
+    circuit.nodes.forEach(n => { inDegree.set(n.id, 0); adj.set(n.id, []); });
+    circuit.wires.forEach(w => { inDegree.set(w.to, (inDegree.get(w.to) ?? 0) + 1); adj.get(w.from)?.push(w.to); });
+    const queue = [];
+    inDegree.forEach((deg, id) => { if (deg === 0) queue.push(id); });
+    const processed = [];
+    while (queue.length > 0) {
+      const id = queue.shift(); processed.push(id);
+      adj.get(id)?.forEach(next => { inDegree.set(next, (inDegree.get(next) ?? 1) - 1); if (inDegree.get(next) === 0) queue.push(next); });
+    }
+    processed.forEach(id => {
+      const node = nodeMap.get(id); if (!node || node.type === 'input') return;
+      const incomingWires = circuit.wires.filter(w => w.to === id);
+      incomingWires.sort((a, b) => a.toPort - b.toPort);
+      const inputValues = incomingWires.map(w => nodeMap.get(w.from)?.value ?? 0);
+      if (node.gateType) node.value = computeGate(node.gateType, inputValues);
+    });
+    return Array.from(nodeMap.values());
+  }
+
+  function targetTruthTable(inputCount, fn) {
+    const rows = [];
+    for (let i = 0; i < (1 << inputCount); i++) {
+      const inputValues = [];
+      for (let j = inputCount - 1; j >= 0; j--) inputValues.push((i >> j) & 1);
+      rows.push({ inputs: inputValues, outputs: [fn(inputValues)] });
+    }
+    return rows;
+  }
+
+  function compareTruthTables(a, b) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; i++) { if (a[i].outputs.join('') !== b[i].outputs.join('')) return false; }
+    return true;
+  }
+
+  const challenges = [
+    { id: 'ch-and', title: 'Build an AND Gate', description: 'Construct a circuit that outputs 1 only when both inputs A and B are 1. Use NAND gates only!', inputLabels: ['A', 'B'], outputLabel: 'Y', targetFn: ([a, b]) => a & b, hint: 'Remember: a NAND gate with both inputs tied together acts as a NOT gate. How can you combine NOT with NAND to get AND?', maxGates: 3, allowedGates: ['NAND'], difficulty: 'Easy' },
+    { id: 'ch-or', title: 'Build an OR Gate', description: 'Construct a circuit that outputs 1 when at least one input is 1. Use only NAND gates!', inputLabels: ['A', 'B'], outputLabel: 'Y', targetFn: ([a, b]) => a | b, hint: "Think about De Morgan's laws. How can you use NOT and NAND together to produce OR?", maxGates: 3, allowedGates: ['NAND'], difficulty: 'Easy' },
+    { id: 'ch-xor', title: 'Build an XOR Gate', description: 'Exclusive OR — output 1 only when inputs differ. Use NAND gates only!', inputLabels: ['A', 'B'], outputLabel: 'Y', targetFn: ([a, b]) => a ^ b, hint: 'XOR can be built with 4 NAND gates. Think about what intermediate signals you need — one gate combines A and B, then use that result with each input separately.', maxGates: 4, allowedGates: ['NAND'], difficulty: 'Medium' },
+    { id: 'ch-mux', title: '2:1 Multiplexer', description: 'Build a 2:1 MUX: if S=0, output A; if S=1, output B. Use any gates.', inputLabels: ['A', 'B', 'S'], outputLabel: 'Y', targetFn: ([a, b, s]) => s ? b : a, hint: 'Think about what happens when S=0 vs S=1. One signal needs to be "selected" while the other is blocked. Which gate blocks a signal (forces it to 0)?', maxGates: 5, allowedGates: ['AND', 'OR', 'NOT', 'NAND', 'NOR', 'XOR', 'XNOR'], difficulty: 'Medium' },
+    { id: 'ch-half-adder', title: 'Half Adder', description: 'Build a half adder with two outputs: one for the Sum, one for the Carry. The Sum should be 1 when exactly one input is 1, and Carry should be 1 when both inputs are 1.', inputLabels: ['A', 'B'], outputLabel: 'S,C', targetFn: ([a, b]) => (a ^ b) * 2 + (a & b), hint: 'Which gate gives 1 when inputs differ? Which gives 1 when both are 1? You need two separate output gates.', maxGates: 2, allowedGates: ['AND', 'OR', 'NOT', 'XOR', 'NAND', 'NOR', 'XNOR'], difficulty: 'Hard' },
+    { id: 'ch-nor-or', title: 'OR from NOR Gates', description: 'Build an OR gate using only NOR gates. De Morgan would be proud!', inputLabels: ['A', 'B'], outputLabel: 'Y', targetFn: ([a, b]) => a | b, hint: 'What does NOR(A, B) give you? How can you invert that result using another NOR gate?', maxGates: 2, allowedGates: ['NOR'], difficulty: 'Easy' },
+    { id: 'ch-xnor', title: 'XNOR from NAND', description: 'Build XNOR — output 1 when both inputs are equal. NAND gates only!', inputLabels: ['A', 'B'], outputLabel: 'Y', targetFn: ([a, b]) => a === b ? 1 : 0, hint: 'XNOR is the opposite of XOR. First build XOR (4 NANDs), then invert the output with one more NAND.', maxGates: 5, allowedGates: ['NAND'], difficulty: 'Hard' },
+    { id: 'ch-7bit-adder', title: 'Count 1s in 7 Bits', description: 'A Full Adder adds three 1-bit inputs and produces a Sum and Carry-out. Given 7 input bits, use the minimum number of Full Adders to count how many of them are 1.', inputLabels: [], outputLabel: '', targetFn: () => 0, hint: 'Think of a tree: pair up the 7 bits into groups of three, feed each group through a Full Adder, then combine the partial results. How many bits does each FA consume, and how many partial results remain?', maxGates: 0, allowedGates: [], difficulty: 'Hard', conceptual: { question: 'A Full Adder takes three 1-bit inputs (A, B, Carry-in) and produces two outputs (Sum, Carry-out). Given 7 input bits, what is the minimum number of Full Adders needed to count how many of them are 1?', answer: '4 Full Adders', explanation: "Arrange the Full Adders in a tree. Layer 1: FA0 adds bits 0,1,2 and FA1 adds bits 3,4,5. Layer 2: FA2 adds FA0's Sum, FA1's Sum, and bit 6. Layer 3: FA3 adds FA0's Carry-out, FA1's Carry-out, and FA2's Carry-out. The three free outputs (FA2 Sum, FA3 Sum, FA3 Carry-out) form the 3-bit count (0–7)." } },
+  ];
+
+  // ==================== HOOKS ====================
+  function useReveal() {
+    const ref = useRef(null);
+    useEffect(() => {
+      const element = ref.current; if (!element) return;
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+      const observeReveals = () => { element.querySelectorAll('.reveal:not(.visible)').forEach(child => observer.observe(child)); };
+      observeReveals();
+      const mutationObserver = new MutationObserver(() => observeReveals());
+      mutationObserver.observe(element, { childList: true, subtree: true });
+      return () => { observer.disconnect(); mutationObserver.disconnect(); };
+    }, []);
+    return ref;
+  }
+
+  function useScrollProgress() {
+    const [scrollProgress, setScrollProgress] = useState(0);
+    useEffect(() => {
+      const handleScroll = () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        setScrollProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
+      };
+      window.addEventListener('scroll', handleScroll, { passive: true }); handleScroll();
+      return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+    return scrollProgress;
+  }
+
+  const allSectionIds = ['hero', 'about', 'logiclab', 'nba', 'avdija', 'gallery', 'contact'];
+  function useActiveSection(sectionIds) {
+    const [activeSection, setActiveSection] = useState(sectionIds[0]);
+    useEffect(() => {
+      const observers = [];
+      sectionIds.forEach(id => {
+        const el = document.getElementById(id); if (!el) return;
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => { if (entry.isIntersecting) setActiveSection(id); });
+        }, { threshold: 0.3, rootMargin: '-20% 0px -50% 0px' });
+        observer.observe(el); observers.push(observer);
+      });
+      return () => observers.forEach(o => o.disconnect());
+    }, [sectionIds]);
+    return activeSection;
+  }
+
+  // ==================== GATE SHAPE ====================
+  const GATE_WIDTH = 64, GATE_HEIGHT = 50;
+  function GateShape({ type, value }) {
+    const stroke = value ? '#2dd4bf' : '#64748b';
+    const fill = value ? 'rgba(13,148,136,0.12)' : 'rgba(30,41,59,0.6)';
+    const sw = 2;
+    switch (type) {
+      case 'AND': return (<svg width={GATE_WIDTH} height={GATE_HEIGHT} viewBox="0 0 64 50"><path d="M 8 5 L 30 5 A 20 20 0 0 1 30 45 L 8 45 Z" fill={fill} stroke={stroke} strokeWidth={sw} /></svg>);
+      case 'OR': return (<svg width={GATE_WIDTH} height={GATE_HEIGHT} viewBox="0 0 64 50"><path d="M 6 5 Q 20 25 6 45 Q 26 45 44 25 Q 26 5 6 5 Z" fill={fill} stroke={stroke} strokeWidth={sw} /></svg>);
+      case 'NOT': return (<svg width={GATE_WIDTH} height={GATE_HEIGHT} viewBox="0 0 64 50"><path d="M 8 6 L 8 44 L 42 25 Z" fill={fill} stroke={stroke} strokeWidth={sw} strokeLinejoin="round" /><circle cx="46" cy="25" r="4" fill={fill} stroke={stroke} strokeWidth={sw} /></svg>);
+      case 'NAND': return (<svg width={GATE_WIDTH} height={GATE_HEIGHT} viewBox="0 0 64 50"><path d="M 8 5 L 26 5 A 20 20 0 0 1 26 45 L 8 45 Z" fill={fill} stroke={stroke} strokeWidth={sw} /><circle cx="48" cy="25" r="4" fill={fill} stroke={stroke} strokeWidth={sw} /></svg>);
+      case 'NOR': return (<svg width={GATE_WIDTH} height={GATE_HEIGHT} viewBox="0 0 64 50"><path d="M 6 5 Q 18 25 6 45 Q 24 45 40 25 Q 24 5 6 5 Z" fill={fill} stroke={stroke} strokeWidth={sw} /><circle cx="46" cy="25" r="4" fill={fill} stroke={stroke} strokeWidth={sw} /></svg>);
+      case 'XOR': return (<svg width={GATE_WIDTH} height={GATE_HEIGHT} viewBox="0 0 64 50"><path d="M 2 5 Q 14 25 2 45" fill="none" stroke={stroke} strokeWidth={sw} /><path d="M 8 5 Q 20 25 8 45 Q 26 45 44 25 Q 26 5 8 5 Z" fill={fill} stroke={stroke} strokeWidth={sw} /></svg>);
+      case 'XNOR': return (<svg width={GATE_WIDTH} height={GATE_HEIGHT} viewBox="0 0 64 50"><path d="M 2 5 Q 14 25 2 45" fill="none" stroke={stroke} strokeWidth={sw} /><path d="M 8 5 Q 20 25 8 45 Q 24 45 40 25 Q 24 5 8 5 Z" fill={fill} stroke={stroke} strokeWidth={sw} /><circle cx="46" cy="25" r="4" fill={fill} stroke={stroke} strokeWidth={sw} /></svg>);
+    }
+  }
+  function getGateInputPorts(type) {
+    switch (type) {
+      case 'NOT': return [{ x: 0, y: 25 }];
+      case 'AND': case 'NAND': return [{ x: 0, y: 17 }, { x: 0, y: 33 }];
+      case 'OR': case 'NOR': return [{ x: 2, y: 17 }, { x: 2, y: 33 }];
+      case 'XOR': case 'XNOR': return [{ x: 4, y: 17 }, { x: 4, y: 33 }];
+    }
+  }
+  function getGateOutputPort(type) {
+    switch (type) {
+      case 'NOT': return { x: 50, y: 25 }; case 'NAND': return { x: 52, y: 25 };
+      case 'NOR': return { x: 50, y: 25 }; case 'XNOR': return { x: 50, y: 25 };
+      case 'AND': return { x: 48, y: 25 }; case 'OR': return { x: 44, y: 25 };
+      case 'XOR': return { x: 44, y: 25 };
+    }
+  }
+
+  // ==================== CIRCUIT BUILDER ====================
+  let idCounter = 0;
+  const genId = () => `n${Date.now()}_${idCounter++}`;
+
+  function CircuitBuilder({ inputLabels, allowedGates, maxGates, onCircuitChange, showTruthTable = true, compact = false }) {
+    const canvasRef = useRef(null);
+    const [nodes, setNodes] = useState([]);
+    const [wires, setWires] = useState([]);
+    const [draggingNode, setDraggingNode] = useState(null);
+    const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+    const [wiring, setWiring] = useState(null);
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const [showGatePallete, setShowGatePallete] = useState(false);
+    const gatesToShow = allowedGates ?? GATE_ORDER;
+
+    useEffect(() => {
+      const inputNodes = inputLabels.map((label, i) => ({ id: `input_${i}`, type: 'input', label, x: 40, y: 60 + i * 70, value: 0 }));
+      setNodes(inputNodes); setWires([]);
+    }, [inputLabels.length]);
+
+    const evaluatedNodes = evaluateCircuit({ nodes, wires });
+    const nodeMap = new Map(evaluatedNodes.map(n => [n.id, n]));
+
+    useEffect(() => {
+      const inputIds = nodes.filter(n => n.type === 'input').map(n => n.id);
+      const outputIds = nodes.filter(n => n.type === 'gate' && !wires.some(w => w.from === n.id)).map(n => n.id);
+      onCircuitChange?.({ nodes, wires }, inputIds, outputIds);
+    }, [nodes, wires]);
+
+    const addGate = (gateType) => {
+      if (maxGates && nodes.filter(n => n.type === 'gate').length >= maxGates) return;
+      const gateCount = nodes.filter(n => n.type === 'gate').length;
+      setNodes(prev => [...prev, { id: genId(), type: 'gate', gateType, x: 240 + (gateCount % 4) * 110, y: 40 + Math.floor(gateCount / 4) * 90, value: 0 }]);
+      setShowGatePallete(false);
+    };
+    const removeNode = (id) => { setNodes(prev => prev.filter(n => n.id !== id)); setWires(prev => prev.filter(w => w.from !== id && w.to !== id)); };
+    const toggleInput = (id) => { setNodes(prev => prev.map(n => n.id === id ? { ...n, value: n.value ? 0 : 1 } : n)); };
+    const removeWire = (id) => { setWires(prev => prev.filter(w => w.id !== id)); };
+
+    useEffect(() => {
+      if (!draggingNode) return;
+      const handleGlobalMove = (e) => {
+        const rect = canvasRef.current?.getBoundingClientRect(); if (!rect) return;
+        const x = e.clientX - rect.left, y = e.clientY - rect.top;
+        setNodes(prev => prev.map(n => n.id === draggingNode ? { ...n, x: Math.max(0, Math.min(rect.width - GATE_WIDTH, x - dragOffset.x)), y: Math.max(0, Math.min(rect.height - GATE_HEIGHT, y - dragOffset.y)) } : n));
+      };
+      const handleGlobalUp = () => setDraggingNode(null);
+      window.addEventListener('mousemove', handleGlobalMove); window.addEventListener('mouseup', handleGlobalUp);
+      return () => { window.removeEventListener('mousemove', handleGlobalMove); window.removeEventListener('mouseup', handleGlobalUp); };
+    }, [draggingNode, dragOffset]);
+
+    useEffect(() => {
+      if (!wiring) return;
+      const handleGlobalMove = (e) => { const rect = canvasRef.current?.getBoundingClientRect(); if (!rect) return; setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top }); };
+      const handleGlobalUp = () => setWiring(null);
+      window.addEventListener('mousemove', handleGlobalMove); window.addEventListener('mouseup', handleGlobalUp);
+      return () => { window.removeEventListener('mousemove', handleGlobalMove); window.removeEventListener('mouseup', handleGlobalUp); };
+    }, [wiring]);
+
+    const onNodeMouseDown = (e, id) => { e.stopPropagation(); const node = nodes.find(n => n.id === id); if (!node) return; const rect = canvasRef.current?.getBoundingClientRect(); if (!rect) return; setDragOffset({ x: e.clientX - rect.left - node.x, y: e.clientY - rect.top - node.y }); setDraggingNode(id); };
+    const startWire = (e, fromId) => { e.stopPropagation(); setWiring(fromId); };
+    const completeWire = (e, toId, toPort) => {
+      e.stopPropagation();
+      if (!wiring || wiring === toId) { setWiring(null); return; }
+      const toNode = nodes.find(n => n.id === toId); if (!toNode || toNode.type !== 'gate') { setWiring(null); return; }
+      const def = toNode.gateType ? GATE_DEFS[toNode.gateType] : null; if (!def) { setWiring(null); return; }
+      if (toPort >= def.inputs) { setWiring(null); return; }
+      setWires(prev => [...prev.filter(w => !(w.to === toId && w.toPort === toPort)), { id: genId(), from: wiring, to: toId, toPort }]);
+      setWiring(null);
+    };
+    const clearAll = () => { const inputNodes = inputLabels.map((label, i) => ({ id: `input_${i}`, type: 'input', label, x: 40, y: 60 + i * 70, value: 0 })); setNodes(inputNodes); setWires([]); };
+
+    const getOutputPos = (node) => { if (node.type === 'input') return { x: node.x + 60, y: node.y + 20 }; const port = getGateOutputPort(node.gateType); return { x: node.x + port.x, y: node.y + port.y }; };
+    const getInputPos = (node, port) => { if (node.type === 'input') return { x: node.x, y: node.y + 20 }; const ports = getGateInputPorts(node.gateType); return { x: node.x + ports[port].x, y: node.y + ports[port].y }; };
+
+    const buildWirePath = (from, to) => {
+      const goingRight = to.x >= from.x; const dx = Math.abs(to.x - from.x); const dy = to.y - from.y;
+      if (goingRight) { const midX = from.x + dx / 2; return `M ${from.x} ${from.y} C ${midX} ${from.y}, ${midX} ${to.y}, ${to.x} ${to.y}`; }
+      else { const offset = 30; const dir = dy >= 0 ? 1 : -1; const routingY = (from.y + to.y) / 2 + dir * offset; return `M ${from.x} ${from.y} L ${from.x + 20} ${from.y} Q ${from.x + 30} ${from.y}, ${from.x + 30} ${from.y + 15 * dir} L ${from.x + 30} ${routingY} Q ${from.x + 30} ${routingY + 15 * -dir}, ${from.x + 15} ${routingY + 15 * -dir} L ${to.x + 15} ${routingY + 15 * -dir} Q ${to.x} ${routingY + 15 * -dir}, ${to.x} ${routingY + 15 * dir} L ${to.x} ${to.y}`; }
+    };
+
+    const outputNodes = nodes.filter(n => n.type === 'gate' && !wires.some(w => w.from === n.id));
+    const gateCount = nodes.filter(n => n.type === 'gate').length;
+
+    return (
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <button onClick={() => setShowGatePallete(!showGatePallete)} disabled={maxGates ? gateCount >= maxGates : false} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-teal-600/20 border border-teal-500/30 text-teal-300 hover:bg-teal-600/30 transition-all text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed"><Plus size={16} />Add Gate</button>
+          <button onClick={clearAll} className="flex items-center gap-2 px-4 py-2 rounded-lg glass-card text-neutral-300 hover:text-red-400 transition-all text-sm font-medium"><Trash2 size={16} />Clear</button>
+          {maxGates && <span className="text-xs text-neutral-500 ml-auto">Gates: {gateCount}/{maxGates}</span>}
+        </div>
+        {showGatePallete && (
+          <div className="glass-card rounded-xl p-3 flex flex-wrap gap-2 animate-fade-in">
+            {gatesToShow.map(gt => { const def = GATE_DEFS[gt]; return (
+              <button key={gt} onClick={() => addGate(gt)} className="flex items-center gap-2 px-3 py-2 rounded-lg bg-neutral-800/60 hover:bg-teal-600/20 border border-white/5 hover:border-teal-500/30 transition-all">
+                <div className="scale-75 origin-center"><GateShape type={gt} value={0} /></div>
+                <div className="text-left"><div className="text-xs font-semibold text-white">{def.label}</div><div className="text-[10px] text-neutral-500">{def.inputs} inp</div></div>
+              </button> ); })}
+          </div>
+        )}
+        <div ref={canvasRef} className="relative bg-neutral-900/60 rounded-xl border border-white/5 overflow-hidden" style={{ height: compact ? 300 : 420 }}>
+          <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, rgba(148,163,184,0.15) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 1 }}>
+            {wires.map(wire => { const from = nodeMap.get(wire.from); const to = nodeMap.get(wire.to); if (!from || !to) return null; const fromPos = getOutputPos(from); const toPos = getInputPos(to, wire.toPort); return (
+              <g key={wire.id} className="pointer-events-auto cursor-pointer" onClick={e => { e.stopPropagation(); removeWire(wire.id); }}>
+                <path d={buildWirePath(fromPos, toPos)} fill="none" stroke={from.value ? '#2dd4bf' : '#64748b'} strokeWidth="2.5" className="hover:stroke-red-500 transition-colors" />
+                <circle cx={toPos.x} cy={toPos.y} r="4" fill={from.value ? '#2dd4bf' : '#64748b'} /><circle cx={fromPos.x} cy={fromPos.y} r="3" fill={from.value ? '#2dd4bf' : '#64748b'} />
+              </g> ); })}
+            {wiring && (() => { const from = nodeMap.get(wiring); if (!from) return null; const fromPos = getOutputPos(from); return <path d={buildWirePath(fromPos, mousePos)} fill="none" stroke="#2dd4bf" strokeWidth="2" strokeDasharray="5,3" opacity="0.6" />; })()}
+          </svg>
+          {evaluatedNodes.map(node => {
+            const isInput = node.type === 'input'; const isOutput = node.type === 'gate' && !wires.some(w => w.from === node.id);
+            const gateDef = node.gateType ? GATE_DEFS[node.gateType] : null;
+            const inputPorts = node.gateType ? getGateInputPorts(node.gateType) : [];
+            const outputPort = node.gateType ? getGateOutputPort(node.gateType) : null;
+            return (
+              <div key={node.id} className="absolute select-none" style={{ left: node.x, top: node.y, zIndex: 2, cursor: 'grab' }} onMouseDown={e => { const target = e.target; if (target.closest && (target.closest('.port-dot') || target.closest('button'))) return; onNodeMouseDown(e, node.id); }}>
+                {isInput ? (
+                  <div className="relative w-[60px]">
+                    <button onClick={() => toggleInput(node.id)} onMouseDown={e => e.stopPropagation()} className="w-full glass-card rounded-lg p-2 text-center hover:border-blue-500/50 transition-all"><div className="text-xs text-blue-400 font-medium">{node.label}</div><div className={`text-lg font-bold ${node.value ? 'text-teal-400' : 'text-neutral-500'}`}>{node.value}</div></button>
+                    <div className="port-dot absolute -right-2 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-neutral-500 bg-neutral-900 hover:border-teal-400 cursor-crosshair transition-colors" onMouseDown={e => startWire(e, node.id)} title="Output — drag to connect" />
+                  </div>
+                ) : (
+                  <div className="relative" style={{ width: GATE_WIDTH, height: GATE_HEIGHT }}>
+                    <GateShape type={node.gateType} value={node.value} />
+                    {inputPorts.map((port, portIdx) => <div key={portIdx} className="port-dot absolute w-3.5 h-3.5 rounded-full border-2 border-neutral-500 bg-neutral-900 hover:border-teal-400 cursor-crosshair transition-colors" style={{ left: port.x - 7, top: port.y - 7 }} onMouseUp={e => completeWire(e, node.id, portIdx)} title={`Input ${portIdx + 1}`} />)}
+                    {outputPort && <div className="port-dot absolute w-3.5 h-3.5 rounded-full border-2 border-neutral-500 bg-neutral-900 hover:border-teal-400 cursor-crosshair transition-colors" style={{ left: outputPort.x - 7, top: outputPort.y - 7 }} onMouseDown={e => startWire(e, node.id)} title="Output — drag to connect" />}
+                    <div className={`absolute -top-2 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${node.value ? 'bg-teal-500 text-neutral-950' : 'bg-neutral-700 text-neutral-400'}`}>{node.value}</div>
+                    <div className="absolute -bottom-4 left-1/2 -translate-x-1/2 text-[9px] text-neutral-500 font-medium whitespace-nowrap">{gateDef?.label}</div>
+                    {isOutput && <div className="absolute -bottom-4 right-0 text-[10px] text-amber-400 font-medium whitespace-nowrap">= {node.value}</div>}
+                    <button onClick={e => { e.stopPropagation(); removeNode(node.id); }} onMouseDown={e => e.stopPropagation()} className="absolute -top-2 -left-2 w-5 h-5 rounded-full bg-red-600/80 hover:bg-red-500 flex items-center justify-center transition-colors z-10"><X size={12} className="text-white" /></button>
+                  </div>
+                )}
+              </div> );
+          })}
+          {nodes.filter(n => n.type === 'gate').length === 0 && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none"><div className="text-center text-neutral-600"><CircuitBoard size={48} className="mx-auto mb-2 opacity-40" /><p className="text-sm">Click "Add Gate" to start building</p><p className="text-xs mt-1">Drag from output dots to input dots to wire gates</p></div></div>
+          )}
+        </div>
+        {outputNodes.length > 0 && (
+          <div className="flex flex-wrap items-center gap-3 text-sm"><span className="text-neutral-400 font-medium">Output:</span>{outputNodes.map(n => <span key={n.id} className="flex items-center gap-1.5 px-3 py-1 rounded-lg glass-card"><Zap size={14} className={n.value ? 'text-teal-400' : 'text-neutral-600'} /><span className={n.value ? 'text-teal-400 font-bold' : 'text-neutral-500'}>{n.value}</span></span>)}</div>
+        )}
+        {showTruthTable && outputNodes.length > 0 && (<TruthTable nodes={evaluatedNodes} wires={wires} inputIds={nodes.filter(n => n.type === 'input').map(n => n.id)} outputIds={outputNodes.map(n => n.id)} inputLabels={inputLabels} />)}
+      </div>
+    );
+  }
+
+  function TruthTable({ nodes, wires, inputIds, outputIds, inputLabels }) {
+    const [rows, setRows] = useState([]);
+    useEffect(() => {
+      const n = inputIds.length; const newRows = [];
+      for (let i = 0; i < (1 << n); i++) {
+        const inputValues = [];
+        for (let j = n - 1; j >= 0; j--) inputValues.push((i >> j) & 1);
+        const testNodes = nodes.map(node => { if (node.type === 'input') { const idx = inputIds.indexOf(node.id); if (idx >= 0) return { ...node, value: inputValues[idx] }; } return { ...node, value: 0 }; });
+        const evaluated = evaluateCircuit({ nodes: testNodes, wires });
+        const outputValues = outputIds.map(oid => evaluated.find(nn => nn.id === oid)?.value ?? 0);
+        newRows.push({ inputs: inputValues, outputs: outputValues });
+      }
+      setRows(newRows);
+    }, [nodes, wires, inputIds, outputIds]);
+    return (
+      <div className="glass-card rounded-xl p-4 overflow-x-auto">
+        <div className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">Truth Table</div>
+        <table className="w-full text-sm"><thead><tr className="border-b border-white/10">{inputLabels.map(label => <th key={label} className="px-3 py-1.5 text-blue-400 font-semibold text-center">{label}</th>)}<th className="px-2 text-neutral-600">|</th>{outputIds.map((_, i) => <th key={i} className="px-3 py-1.5 text-amber-400 font-semibold text-center">Y{i + 1}</th>)}</tr></thead>
+          <tbody>{rows.map((row, i) => <tr key={i} className="border-b border-white/5 hover:bg-white/5 transition-colors">{row.inputs.map((v, j) => <td key={j} className={`px-3 py-1.5 text-center font-mono ${v ? 'text-teal-400' : 'text-neutral-500'}`}>{v}</td>)}<td className="px-2 text-neutral-700">|</td>{row.outputs.map((v, j) => <td key={j} className={`px-3 py-1.5 text-center font-mono font-bold ${v ? 'text-amber-400' : 'text-neutral-600'}`}>{v}</td>)}</tr>)}</tbody>
+        </table>
+      </div>
+    );
+  }
+
+  // ==================== FULL ADDER BUILDER ====================
+  const NUM_BITS = 7, MIN_FAS = 4, FA_NODE_W = 112, FA_NODE_H = 76, CANVAS_W = 860, CANVAS_H = 400, BIT_AREA_W = 70, BIT_SPACING = 42, BIT_START_Y = 36;
+  const inputPortY = { a: 18, b: 38, cin: 58 }, outputPortY = { sum: 25, cout: 51 };
+
+  function topoSortFAs(nodeIds, faInputs) {
+    const visited = new Set(), inProgress = new Set(), result = [];
+    const visit = id => { if (visited.has(id)) return true; if (inProgress.has(id)) return false; inProgress.add(id); const inputs = faInputs.get(id); if (inputs) { for (const src of [inputs.a, inputs.b, inputs.cin]) { if (src && src.type === 'fa' && !visit(src.nodeId)) return false; } } inProgress.delete(id); visited.add(id); result.push(id); return true; };
+    for (const id of nodeIds) { if (!visit(id)) return null; }
+    return result;
+  }
+  function permuteIndices(n) {
+    if (n <= 1) return [[0]]; const arr = Array.from({ length: n }, (_, i) => i); const result = [];
+    const generate = k => { if (k === 1) { result.push([...arr]); return; } for (let i = 0; i < k; i++) { generate(k - 1); const tmp = arr[i]; arr[i] = arr[k - 1]; arr[k - 1] = tmp; } };
+    generate(n); return result;
+  }
+
+  function FullAdderBuilder() {
+    const canvasRef = useRef(null); const nextNodeId = useRef(1); const nextWireId = useRef(1);
+    const [nodes, setNodes] = useState([]); const [wires, setWires] = useState([]);
+    const [draggingNode, setDraggingNode] = useState(null); const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+    const [wiring, setWiring] = useState(null); const [pointer, setPointer] = useState({ x: 0, y: 0 });
+    const [checkResult, setCheckResult] = useState(null);
+
+    useEffect(() => {
+      if (draggingNode === null && wiring === null) return;
+      const move = event => { const rect = canvasRef.current?.getBoundingClientRect(); if (!rect) return; const x = event.clientX - rect.left, y = event.clientY - rect.top; setPointer({ x, y }); if (draggingNode !== null) { setNodes(current => current.map(node => node.id === draggingNode ? { ...node, x: Math.max(BIT_AREA_W + 14, Math.min(CANVAS_W - FA_NODE_W - 8, x - dragOffset.x)), y: Math.max(28, Math.min(CANVAS_H - FA_NODE_H - 8, y - dragOffset.y)) } : node)); } };
+      const end = () => { setDraggingNode(null); setWiring(null); };
+      window.addEventListener('pointermove', move); window.addEventListener('pointerup', end);
+      return () => { window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', end); };
+    }, [draggingNode, wiring, dragOffset]);
+
+    const addFullAdder = () => { if (nodes.length >= NUM_BITS) return; const index = nodes.length; const id = nextNodeId.current++; setNodes(current => [...current, { id, x: BIT_AREA_W + 22 + (index % 4) * 138, y: 40 + Math.floor(index / 4) * 120 }]); };
+    const deleteNode = nodeId => { setNodes(current => current.filter(n => n.id !== nodeId)); setWires(current => current.filter(w => !(w.from.type === 'fa' && w.from.nodeId === nodeId) && w.toId !== nodeId)); setCheckResult(null); };
+    const clear = () => { setNodes([]); setWires([]); setCheckResult(null); };
+    const startDragging = (event, node) => { const target = event.target; if (target.closest && (target.closest('.fa-port') || target.closest('.fa-delete'))) return; const rect = canvasRef.current?.getBoundingClientRect(); if (!rect) return; setDragOffset({ x: event.clientX - rect.left - node.x, y: event.clientY - rect.top - node.y }); setDraggingNode(node.id); event.preventDefault(); };
+    const startWire = (event, source) => { event.stopPropagation(); const rect = canvasRef.current?.getBoundingClientRect(); if (rect) setPointer({ x: event.clientX - rect.left, y: event.clientY - rect.top }); setWiring(source); event.preventDefault(); };
+    const completeWire = (event, toId, toPort) => { event.stopPropagation(); if (!wiring) return; if (wiring.type === 'fa' && wiring.nodeId === toId) return; setWires(current => [...current.filter(wire => !(wire.toId === toId && wire.toPort === toPort)), { id: nextWireId.current++, from: wiring, toId, toPort }]); setWiring(null); };
+    const removeWire = wireId => setWires(current => current.filter(wire => wire.id !== wireId));
+
+    const nodeById = id => nodes.find(node => node.id === id);
+    const outputPosition = (node, port) => ({ x: node.x + FA_NODE_W, y: node.y + outputPortY[port] });
+    const inputPosition = (node, port) => ({ x: node.x, y: node.y + inputPortY[port] });
+    const bitPortPosition = bitIndex => ({ x: BIT_AREA_W, y: BIT_START_Y + bitIndex * BIT_SPACING });
+    const sourcePosition = source => { if (source.type === 'fa') { const node = nodeById(source.nodeId); if (!node) return { x: 0, y: 0 }; return outputPosition(node, source.port); } return bitPortPosition(source.bitIndex); };
+    const wirePath = (from, to) => { const midX = Math.max(from.x + 24, (from.x + to.x) / 2); return `M ${from.x} ${from.y} C ${midX} ${from.y}, ${midX} ${to.y}, ${to.x} ${to.y}`; };
+
+    const checkSolution = () => {
+      if (nodes.length < MIN_FAS) { setCheckResult({ correct: false, message: `You need at least ${MIN_FAS} Full Adders for a 7-bit population counter. You currently have ${nodes.length}.` }); return; }
+      const connectedBits = new Set(); for (const wire of wires) { if (wire.from.type === 'bit') connectedBits.add(wire.from.bitIndex); }
+      for (let i = 0; i < NUM_BITS; i++) { if (!connectedBits.has(i)) { setCheckResult({ correct: false, message: `Bit ${i} is not connected. All 7 bits (0–6) must be used.` }); return; } }
+      const faInputs = new Map();
+      for (const node of nodes) { const aWire = wires.find(w => w.toId === node.id && w.toPort === 'a'); const bWire = wires.find(w => w.toId === node.id && w.toPort === 'b'); const cinWire = wires.find(w => w.toId === node.id && w.toPort === 'cin'); faInputs.set(node.id, { a: aWire ? aWire.from : null, b: bWire ? bWire.from : null, cin: cinWire ? cinWire.from : null }); }
+      const sorted = topoSortFAs(nodes.map(n => n.id), faInputs);
+      if (!sorted) { setCheckResult({ correct: false, message: 'There is a cycle in your wiring. Full Adders cannot feed into each other circularly.' }); return; }
+      const freeOutputs = [];
+      for (const node of nodes) { for (const port of ['sum', 'cout']) { const isUsed = wires.some(w => w.from.type === 'fa' && w.from.nodeId === node.id && w.from.port === port); if (!isUsed) freeOutputs.push({ nodeId: node.id, port }); } }
+      if (freeOutputs.length < 3) { setCheckResult({ correct: false, message: `Your circuit has only ${freeOutputs.length} unconnected output(s). A 7-bit counter needs at least 3 output bits (to represent 0–7).` }); return; }
+      if (freeOutputs.length > 6) { setCheckResult({ correct: false, message: 'Too many unconnected outputs. Connect more Full Adders together to form a tree.' }); return; }
+      const perms = permuteIndices(freeOutputs.length); let foundCorrect = false;
+      for (const perm of perms) { let allMatch = true; for (let combo = 0; combo < 128 && allMatch; combo++) { const bitValues = Array.from({ length: NUM_BITS }, (_, i) => (combo >> i) & 1); const expected = bitValues.reduce((s, v) => s + v, 0); const faValues = new Map(); const getVal = src => { if (!src) return 0; if (src.type === 'bit') return bitValues[src.bitIndex]; return faValues.get(`${src.nodeId}:${src.port}`) ?? 0; }; for (const nodeId of sorted) { const inputs = faInputs.get(nodeId); const a = getVal(inputs.a), b = getVal(inputs.b), cin = getVal(inputs.cin); faValues.set(`${nodeId}:sum`, a ^ b ^ cin); faValues.set(`${nodeId}:cout`, (a & b) | (a & cin) | (b & cin)); } let outputVal = 0; for (let i = 0; i < perm.length; i++) { const { nodeId, port } = freeOutputs[perm[i]]; outputVal += (faValues.get(`${nodeId}:${port}`) ?? 0) << i; } if (outputVal !== expected) allMatch = false; } if (allMatch) { foundCorrect = true; break; } }
+      if (foundCorrect) { const isMinimal = nodes.length === MIN_FAS; setCheckResult({ correct: true, message: isMinimal ? `Correct! ${MIN_FAS} Full Adders is the minimum for a 7-bit population counter. Tree structure: two FAs each take three bits, one FA combines their sums with the 7th bit, and the last FA combines all carries.` : `Correct! Your circuit counts the 1s in 7 bits using ${nodes.length} Full Adders. The minimum is ${MIN_FAS} — can you do it with fewer?` }); }
+      else { setCheckResult({ correct: false, message: 'Your circuit does not correctly count the 1s in all 128 input combinations. Check that all 7 bits are connected and the FAs form a valid tree.' }); }
+    };
+
+    return (
+      <div className="mt-8">
+        <div className="flex flex-wrap items-center gap-3 mb-3">
+          <button onClick={addFullAdder} disabled={nodes.length >= NUM_BITS} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-teal-600/20 border border-teal-500/30 text-teal-300 hover:bg-teal-600/30 transition-all text-sm font-medium disabled:opacity-40 disabled:cursor-not-allowed"><Plus size={16} />Add Full Adder</button>
+          <button onClick={clear} className="flex items-center gap-2 px-4 py-2 rounded-lg glass-card text-neutral-300 hover:text-red-400 transition-all text-sm font-medium"><Trash2 size={16} />Clear All</button>
+          <button onClick={checkSolution} className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold hover:scale-105 transition-all text-sm"><ClipboardCheck size={16} />Check Solution</button>
+          <span className="text-xs text-neutral-500 sm:ml-auto">Full Adders: {nodes.length}/{NUM_BITS} · Minimum: {MIN_FAS}</span>
+        </div>
+        <div className="rounded-xl border border-white/5 bg-neutral-900/60 overflow-x-auto">
+          <div ref={canvasRef} className="relative" style={{ width: CANVAS_W, height: CANVAS_H }}>
+            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, rgba(148,163,184,0.15) 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
+            <div className="absolute top-2 left-3 text-[10px] uppercase tracking-wider text-neutral-600">Drag blocks to arrange · Drag from any output dot to an input dot</div>
+            <div className="absolute text-[10px] uppercase tracking-wider text-cyan-500/70 font-semibold select-none" style={{ left: 10, top: BIT_START_Y - 16 }}>Input Bits</div>
+            <div className="absolute bg-white/5" style={{ left: BIT_AREA_W + 8, top: 0, bottom: 0, width: 1 }} />
+            {Array.from({ length: NUM_BITS }).map((_, i) => (
+              <div key={`bit-${i}`} className="flex items-center gap-2 absolute" style={{ left: 8, top: BIT_START_Y + i * BIT_SPACING - 10 }}>
+                <span className="text-sm font-mono font-bold text-cyan-300 select-none w-6 text-right">{i}</span>
+                <div className="fa-port cursor-crosshair" onPointerDown={e => startWire(e, { type: 'bit', bitIndex: i })}><span className="w-3.5 h-3.5 rounded-full border-2 border-cyan-300 bg-neutral-950 block" /></div>
+              </div>
+            ))}
+            <svg className="absolute inset-0 pointer-events-none" width={CANVAS_W} height={CANVAS_H}>
+              {wires.map(wire => { const from = sourcePosition(wire.from); const toNode = nodeById(wire.toId); if (!toNode) return null; const to = inputPosition(toNode, wire.toPort); const color = wire.from.type === 'bit' ? '#22d3ee' : '#2dd4bf'; return (<g key={wire.id} className="pointer-events-auto cursor-pointer" onClick={() => removeWire(wire.id)}><path d={wirePath(from, to)} fill="none" stroke={color} strokeWidth="2.5" /><circle cx={to.x} cy={to.y} r="3" fill={color} /></g>); })}
+              {wiring && (() => { const from = sourcePosition(wiring); return <path d={wirePath(from, pointer)} fill="none" stroke="#fbbf24" strokeWidth="2" strokeDasharray="5 4" />; })()}
+            </svg>
+            {nodes.length === 0 && <div className="absolute flex items-center justify-center text-center text-neutral-600 text-sm pointer-events-none" style={{ left: BIT_AREA_W + 20, right: 8, top: 0, bottom: 0 }}>Add Full Adder blocks to begin your design.</div>}
+            {nodes.map(node => (
+              <div key={node.id} className="absolute select-none" style={{ left: node.x, top: node.y, width: FA_NODE_W, height: FA_NODE_H }} onPointerDown={event => startDragging(event, node)}>
+                <div className="relative w-full h-full rounded-lg border border-teal-400/60 bg-teal-950/80 shadow-lg shadow-teal-900/20 cursor-grab active:cursor-grabbing">
+                  <button className="fa-delete absolute -top-2 -right-2 w-5 h-5 rounded-full bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white z-20 transition-colors" onClick={e => { e.stopPropagation(); deleteNode(node.id); }} onPointerDown={e => e.stopPropagation()}><X size={12} /></button>
+                  <div className="absolute inset-0 flex items-center justify-center text-lg font-bold tracking-widest text-teal-300">FA</div>
+                  <span className="absolute -top-5 left-1/2 -translate-x-1/2 text-[10px] text-neutral-500">FA {node.id}</span>
+                  {Object.keys(inputPortY).map(port => <div key={port} className="fa-port absolute -left-2 flex items-center gap-1" style={{ top: inputPortY[port] - 6 }} onPointerUp={event => completeWire(event, node.id, port)}><span className="w-3 h-3 rounded-full border-2 border-blue-300 bg-neutral-950" /><span className="absolute left-4 text-[9px] text-blue-300">{port === 'cin' ? 'Cin' : port.toUpperCase()}</span></div>)}
+                  {Object.keys(outputPortY).map(port => <div key={port} className="fa-port absolute -right-2 flex items-center gap-1" style={{ top: outputPortY[port] - 6 }} onPointerDown={event => startWire(event, { type: 'fa', nodeId: node.id, port })}><span className="absolute right-4 text-[9px] text-amber-300 whitespace-nowrap">{port === 'cout' ? 'Cout' : 'Sum'}</span><span className="w-3 h-3 rounded-full border-2 border-amber-300 bg-neutral-950" /></div>)}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <p className="text-xs text-neutral-500 mt-3">Wire the 7 input bits (0–6) into Full Adders to count how many are 1. Tree structure: two FAs each take three bits, one FA combines their sums with the 7th bit, and the last FA combines all carries. Minimum is 4 FAs. Click any wire to remove it. Use the × button on a block to delete it.</p>
+        {checkResult && <div className={`mt-4 rounded-xl p-4 border-l-4 animate-fade-in ${checkResult.correct ? 'border-teal-500 bg-teal-500/10' : 'border-red-500 bg-red-500/10'}`}><div className="flex items-start gap-3">{checkResult.correct ? <CheckCircle2 size={20} className="text-teal-400 flex-shrink-0 mt-0.5" /> : <XCircle size={20} className="text-red-400 flex-shrink-0 mt-0.5" />}<p className={`text-sm leading-relaxed ${checkResult.correct ? 'text-teal-300' : 'text-red-300'}`}>{checkResult.message}</p></div></div>}
+      </div>
+    );
+  }
+
+  // ==================== AVDIJA STATS ====================
+  const ESPN_GAMELOG_URL = `https://site.web.api.espn.com/apis/common/v3/sports/basketball/nba/athletes/${deniAvdijaInfo.espnAthleteId}/gamelog`;
+  const CACHE_KEY = 'avdija_gamelog_cache_v1';
+  const STATS_LABELS = ['MIN', 'FG', 'FG%', '3PT', '3P%', 'FT', 'FT%', 'REB', 'AST', 'BLK', 'STL', 'PF', 'TO', 'PTS'];
+
+  function toNum(value) { if (!value) return 0; const parsed = Number(value); return Number.isFinite(parsed) ? parsed : 0; }
+
+  function parseGamelog(data) {
+    if (!data || typeof data !== 'object') return null;
+    const root = data;
+    const labels = Array.isArray(root.labels) ? root.labels : Array.from(STATS_LABELS);
+    const eventsMap = root.events;
+    const seasonTypes = Array.isArray(root.seasonTypes) ? root.seasonTypes : [];
+    const regularSeason = seasonTypes.find(st => /regular season/i.test(String(st.displayName ?? '')));
+    if (!regularSeason) return null;
+    const categories = Array.isArray(regularSeason.categories) ? regularSeason.categories : [];
+    const games = [];
+    for (const category of categories) {
+      const catGames = Array.isArray(category.events) ? category.events : [];
+      for (const gameEntry of catGames) {
+        const eventId = String(gameEntry.eventId ?? '');
+        const rawStats = Array.isArray(gameEntry.stats) ? gameEntry.stats : [];
+        const statsByLabel = {};
+        labels.forEach((label, i) => { statsByLabel[label] = rawStats[i] ?? ''; });
+        const meta = eventsMap?.[eventId];
+        const gameDate = meta ? String(meta.gameDate ?? '') : '';
+        const opponentObj = meta?.opponent;
+        const opponent = opponentObj ? String(opponentObj.displayName ?? '—') : '—';
+        const result = String(meta?.gameResult ?? '') === 'L' ? 'L' : 'W';
+        const score = String(meta?.score ?? '—');
+        games.push({ date: gameDate, opponent, result, score, points: toNum(statsByLabel['PTS']), rebounds: toNum(statsByLabel['REB']), assists: toNum(statsByLabel['AST']), blocks: toNum(statsByLabel['BLK']), steals: toNum(statsByLabel['STL']), minutes: toNum(statsByLabel['MIN']), fgPct: toNum(statsByLabel['FG%']), fg3Pct: toNum(statsByLabel['3P%']), ftPct: toNum(statsByLabel['FT%']), turnovers: toNum(statsByLabel['TO']) });
+      }
+    }
+    games.sort((a, b) => a.date.localeCompare(b.date));
+    if (games.length === 0) return null;
+    const n = games.length;
+    const avg = selector => games.reduce((sum, g) => sum + selector(g), 0) / n;
+    const filters = Array.isArray(root.filters) ? root.filters : [];
+    const seasonFilter = filters.find(f => f.name === 'season');
+    const seasonValue = seasonFilter ? String(seasonFilter.value ?? '') : '';
+    const seasonLabel = (() => { if (!seasonFilter) return ''; const options = Array.isArray(seasonFilter.options) ? seasonFilter.options : []; const match = options.find(o => String(o.value ?? '') === seasonValue); return match ? String(match.displayValue ?? '') : ''; })();
+    return { seasonLabel, gamesPlayed: n, ppg: avg(g => g.points), rpg: avg(g => g.rebounds), apg: avg(g => g.assists), fgPct: avg(g => g.fgPct), fg3Pct: avg(g => g.fg3Pct), ftPct: avg(g => g.ftPct), spg: avg(g => g.steals), bpg: avg(g => g.blocks), topg: avg(g => g.turnovers), mpg: avg(g => g.minutes), mostRecentGame: games[games.length - 1] };
+  }
+
+  function readCache() { try { const raw = localStorage.getItem(CACHE_KEY); if (!raw) return null; const parsed = JSON.parse(raw); if (!parsed || typeof parsed !== 'object' || parsed.json === undefined) return null; return parsed; } catch { return null; } }
+  function writeCache(json) { try { const payload = { json, fetchedAt: Date.now() }; localStorage.setItem(CACHE_KEY, JSON.stringify(payload)); } catch { } }
+  function formatGameDate(iso) { if (!iso) return ''; const date = new Date(iso); if (Number.isNaN(date.getTime())) return ''; return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }); }
+
+  function AvdijaStats() {
+    const [stats, setStats] = useState(null); const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null); const [usingCache, setUsingCache] = useState(false);
+    const [lastUpdated, setLastUpdated] = useState(null);
+    const fetchStats = useCallback(async () => {
+      setLoading(true); setError(null);
+      const url = `${ESPN_GAMELOG_URL}?t=${Date.now()}`;
+      try { const response = await fetch(url, { cache: 'no-store' }); if (!response.ok) throw new Error(`Request failed (${response.status})`); const data = await response.json(); const parsed = parseGamelog(data); if (!parsed) throw new Error('Could not parse season data from response'); writeCache(data); setStats(parsed); setUsingCache(false); setLastUpdated(new Date()); }
+      catch { const cached = readCache(); if (cached) { const parsed = parseGamelog(cached.json); if (parsed) { setStats(parsed); setUsingCache(true); setLastUpdated(new Date(cached.fetchedAt)); setError('Live stats unavailable — showing cached data.'); } else { setError('Live stats unavailable and cached data is invalid.'); setStats(null); } } else { setError('Stats are temporarily unavailable. Please try again in a moment.'); setStats(null); } }
+      finally { setLoading(false); }
+    }, []);
+    useEffect(() => { fetchStats(); }, [fetchStats]);
+    const statCards = stats ? [
+      { label: 'Points', value: stats.ppg.toFixed(1), sublabel: 'per game', highlight: true },
+      { label: 'Rebounds', value: stats.rpg.toFixed(1), sublabel: 'per game' },
+      { label: 'Assists', value: stats.apg.toFixed(1), sublabel: 'per game' },
+      { label: 'FG %', value: stats.fgPct.toFixed(1) + '%' }, { label: '3PT %', value: stats.fg3Pct.toFixed(1) + '%' },
+      { label: 'FT %', value: stats.ftPct.toFixed(1) + '%' }, { label: 'Steals', value: stats.spg.toFixed(1) },
+      { label: 'Blocks', value: stats.bpg.toFixed(1) }, { label: 'Minutes', value: stats.mpg.toFixed(1), sublabel: 'per game' },
+      { label: 'Games', value: String(stats.gamesPlayed), sublabel: 'played' },
+    ] : [];
+    const lastGame = stats?.mostRecentGame ?? null; const lastGameDateText = lastGame ? formatGameDate(lastGame.date) : '';
+    return (
+      <div className="reveal mb-12">
+        <div className="glass-card rounded-2xl p-5 sm:p-6 mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4"><div className="w-14 h-14 rounded-full bg-gradient-to-br from-red-600 to-orange-500 flex items-center justify-center flex-shrink-0 font-bold text-white text-lg">DA</div><div><div className="flex items-center gap-2"><h3 className="text-xl font-bold text-white">{deniAvdijaInfo.fullName}</h3><span className="text-xs px-2 py-0.5 rounded-full bg-red-600/20 text-red-400 font-medium">{deniAvdijaInfo.nickname}</span></div><p className="text-sm text-neutral-400">{deniAvdijaInfo.team} · {deniAvdijaInfo.position} · {deniAvdijaInfo.height}</p></div></div>
+            <div className="flex items-center gap-3 text-sm">{usingCache && <span className="flex items-center gap-1.5 text-amber-400/80 text-xs"><AlertCircle size={14} />Using cached stats</span>}{lastUpdated && !loading && <span className="text-neutral-500 text-xs hidden sm:inline">Updated {lastUpdated.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span>}<button onClick={fetchStats} disabled={loading} className="flex items-center gap-2 px-3 py-1.5 rounded-lg glass-card-hover text-neutral-300 hover:text-white text-xs font-medium disabled:opacity-50"><RefreshCw size={14} className={loading ? 'animate-spin' : ''} />Refresh</button></div>
+          </div>
+        </div>
+        {loading && !stats ? (<div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4">{Array.from({ length: 10 }).map((_, i) => <div key={i} className="glass-card rounded-xl p-5 animate-pulse"><div className="h-8 w-16 bg-neutral-700/50 rounded mb-2" /><div className="h-3 w-12 bg-neutral-700/30 rounded" /></div>)}</div>)
+        : error && !stats ? (<div className="glass-card rounded-2xl p-8 text-center"><AlertCircle className="mx-auto mb-3 text-amber-400/70" size={28} /><p className="text-neutral-300 text-sm">{error}</p><button onClick={fetchStats} className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-lg glass-card-hover text-neutral-200 hover:text-white text-sm font-medium"><RefreshCw size={14} />Try again</button></div>)
+        : (<div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-4">{statCards.map(card => <div key={card.label} className={`glass-card glass-card-hover rounded-xl p-5 text-center relative overflow-hidden ${card.highlight ? 'ring-1 ring-red-600/30' : ''}`}>{card.highlight && <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-red-600 to-orange-400" />}<div className={`text-3xl sm:text-4xl font-black mb-1 ${card.highlight ? 'gradient-text' : 'text-white'}`}>{card.value}</div><div className="text-xs sm:text-sm text-neutral-400 font-medium">{card.label}</div>{card.sublabel && <div className="text-xs text-neutral-600 mt-0.5">{card.sublabel}</div>}</div>)}</div>)}
+        {stats && <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm"><div className="flex items-center gap-2 text-neutral-500"><TrendingUp size={16} className="text-red-400" /><span>Season Averages{stats.seasonLabel ? ` — ${stats.seasonLabel}` : ''}</span></div>{lastGame && lastGameDateText && <div className="flex items-center gap-2 text-neutral-500"><Calendar size={16} className="text-red-400" /><span>Last game: {lastGameDateText} vs {lastGame.opponent} ({lastGame.result} {lastGame.score})</span></div>}</div>}
+      </div>
+    );
+  }
+
+  // ==================== NAVBAR ====================
+  const navItems = [
+    { id: 'hero', label: 'Home' }, { id: 'about', label: 'About' }, { id: 'logiclab', label: 'Logic Lab' },
+    { id: 'nba', label: 'Basketball', children: [{ id: 'nba', label: 'NBA Highlights' }, { id: 'avdija', label: 'Deni Avdija' }] },
+    { id: 'gallery', label: 'Photos' }, { id: 'contact', label: 'Connect' },
+  ];
+
+  function Navbar() {
+    const [scrolled, setScrolled] = useState(false); const [dropdownOpen, setDropdownOpen] = useState(false);
+    const dropdownRef = useRef(null); const scrollProgress = useScrollProgress(); const activeSection = useActiveSection(allSectionIds);
+    useEffect(() => { const handleScroll = () => setScrolled(window.scrollY > 50); window.addEventListener('scroll', handleScroll, { passive: true }); return () => window.removeEventListener('scroll', handleScroll); }, []);
+    useEffect(() => { const handleClickOutside = e => { if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setDropdownOpen(false); }; document.addEventListener('mousedown', handleClickOutside); return () => document.removeEventListener('mousedown', handleClickOutside); }, []);
+    const handleNavClick = id => { setDropdownOpen(false); document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); };
+    return (
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'bg-neutral-950/85 backdrop-blur-xl border-b border-white/5 py-2.5' : 'bg-transparent py-4'}`}>
+        <div className="flex items-center justify-center px-4 sm:px-6">
+          <div className="flex items-center gap-0.5 sm:gap-1">
+            {navItems.map(item => {
+              const isActive = item.children ? item.children.some(c => activeSection === c.id) : activeSection === item.id;
+              if (item.children) return (
+                <div key={item.id} ref={dropdownRef} className="relative">
+                  <button onClick={() => setDropdownOpen(!dropdownOpen)} className={`relative flex items-center gap-1 px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-colors duration-300 whitespace-nowrap ${isActive ? 'text-red-400' : 'text-neutral-300 hover:text-white'}`}>{item.label}<ChevronDown size={14} className={`transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />{isActive && <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-5 sm:w-6 bg-red-500 rounded-full" />}</button>
+                  {dropdownOpen && <div className="absolute top-full left-1/2 -translate-x-1/2 mt-1 glass-card rounded-xl py-1.5 min-w-[180px] animate-fade-in shadow-xl">{item.children.map(child => <button key={child.id} onClick={() => handleNavClick(child.id)} className={`block w-full text-left px-4 py-2 text-sm transition-colors ${activeSection === child.id ? 'text-red-400 bg-white/5' : 'text-neutral-300 hover:text-white hover:bg-white/5'}`}>{child.label}</button>)}</div>}
+                </div>
+              );
+              return <button key={item.id} onClick={() => handleNavClick(item.id)} className={`relative px-2.5 sm:px-4 py-2 text-xs sm:text-sm font-medium transition-colors duration-300 whitespace-nowrap ${isActive ? 'text-red-400' : 'text-neutral-300 hover:text-white'}`}>{item.label}{isActive && <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 w-5 sm:w-6 bg-red-500 rounded-full" />}</button>;
+            })}
+          </div>
+        </div>
+        <div className="absolute bottom-0 left-0 h-0.5 bg-gradient-to-r from-red-600 via-orange-400 to-red-600 transition-all duration-150" style={{ width: `${scrollProgress}%` }} />
+      </nav>
+    );
+  }
+
+  // ==================== HERO ====================
+  const heroIconMap = { code: <Code size={20} />, calendar: <Calendar size={20} />, trophy: <Trophy size={20} />, coffee: <Coffee size={20} /> };
+  function Hero() {
+    return (
+      <section id="hero" className="relative min-h-screen flex items-center justify-center hero-gradient overflow-hidden pt-20">
+        <div className="absolute top-1/4 left-10 w-72 h-72 bg-red-600/10 rounded-full blur-3xl animate-float" />
+        <div className="absolute bottom-1/4 right-10 w-96 h-96 bg-blue-900/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '2s' }} />
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <div className="flex flex-col items-center text-center">
+            <div className="relative mb-8 animate-scale-in">
+              <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full image-placeholder flex items-center justify-center animate-pulse-glow">{personalInfo.photo ? <img src={personalInfo.photo} alt={personalInfo.name} className="w-full h-full rounded-full object-cover" /> : <Sparkles className="text-neutral-500" size={32} />}</div>
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-green-500 rounded-full border-4 border-neutral-950 flex items-center justify-center"><span className="w-3 h-3 bg-green-300 rounded-full animate-pulse" /></div>
+            </div>
+            <div className="animate-fade-in-up" style={{ animationDelay: '0.2s' }}><p className="text-sm font-medium text-red-400 uppercase tracking-widest mb-3">Welcome to my world</p><h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-white mb-4 text-shadow-lg">{personalInfo.name}</h1><p className="text-lg sm:text-xl text-neutral-400 font-light max-w-2xl mb-8">{personalInfo.tagline}</p></div>
+            <p className="text-base sm:text-lg text-neutral-300 max-w-2xl leading-relaxed mb-12 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>{personalInfo.bio}</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 w-full max-w-3xl animate-fade-in-up" style={{ animationDelay: '0.6s' }}>{quickStats.map(stat => <div key={stat.label} className="glass-card glass-card-hover rounded-2xl p-4 sm:p-6 text-center"><div className="flex justify-center text-red-400 mb-2">{heroIconMap[stat.icon]}</div><div className="text-2xl sm:text-3xl font-bold text-white">{stat.value}</div><div className="text-xs sm:text-sm text-neutral-400 mt-1">{stat.label}</div></div>)}</div>
+            <button onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })} className="mt-16 animate-fade-in-up flex flex-col items-center gap-2 text-neutral-400 hover:text-red-400 transition-colors duration-300" style={{ animationDelay: '0.8s' }}><span className="text-sm uppercase tracking-widest">Scroll to explore</span><ArrowDown size={20} className="animate-bounce" /></button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // ==================== ABOUT ====================
+  function About() {
+    const ref = useReveal();
+    return (
+      <section id="about" ref={ref} className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="reveal text-center mb-16"><p className="text-sm font-semibold text-red-400 uppercase tracking-widest mb-3">Get to know me</p><h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">About Me</h2><div className="w-20 h-1 bg-gradient-to-r from-red-600 to-orange-400 mx-auto rounded-full" /></div>
+          <div className="reveal glass-card rounded-3xl p-6 sm:p-10 text-center">
+            <h3 className="text-2xl font-semibold text-white mb-8">Hey, I'm {personalInfo.name}</h3>
+            <div className="flex flex-col items-center gap-4 mb-2">
+              <div className="flex items-center gap-3 text-neutral-300"><MapPin className="text-red-400 flex-shrink-0" size={18} /><span>{personalInfo.location}</span></div>
+              <div className="flex items-center gap-3 text-neutral-300"><GraduationCap className="text-red-400 flex-shrink-0" size={18} /><span>B.Sc. Electrical Engineering — Technion, 4th Year</span></div>
+              <div className="flex items-center gap-3 text-neutral-300"><Cpu className="text-red-400 flex-shrink-0" size={18} /><span>Formal Verification Engineer at Intel</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // ==================== GALLERY ====================
+  function Gallery() {
+    const ref = useReveal(); const [selectedPhoto, setSelectedPhoto] = useState(null);
+    return (
+      <section id="gallery" ref={ref} className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-neutral-950 via-neutral-900/30 to-neutral-950">
+        <div className="max-w-7xl mx-auto">
+          <div className="reveal text-center mb-12">
+            <div className="inline-flex items-center gap-2 text-sm font-semibold text-red-400 uppercase tracking-widest mb-3"><Camera size={16} /><span>Life in Frames</span></div>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">Thailand, Last Summer</h2>
+            <p className="text-xl sm:text-2xl font-semibold text-white max-w-3xl mx-auto leading-relaxed">Ilay is my girlfriend — these are photos of us from our trip to Thailand last summer.</p>
+            <div className="w-20 h-1 bg-gradient-to-r from-red-600 to-orange-400 mx-auto rounded-full mt-4" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-5xl mx-auto">
+            {experiencePhotos.map((photo, index) => (
+              <div key={photo.id} className="reveal group cursor-pointer" style={{ transitionDelay: `${index * 0.08}s` }} onClick={() => setSelectedPhoto(photo)}>
+                <div className="relative aspect-[4/5] rounded-2xl overflow-hidden glass-card glass-card-hover">
+                  {photo.imageUrl ? <img src={photo.imageUrl} alt={photo.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" /> : <div className="w-full h-full image-placeholder flex flex-col items-center justify-center gap-3"><ImageIcon className="text-neutral-600" size={32} /><span className="text-xs text-neutral-600">Photo coming soon</span></div>}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5 translate-y-4 group-hover:translate-y-0 opacity-0 group-hover:opacity-100 transition-all duration-400"><h3 className="text-lg font-semibold text-white">{photo.title}</h3><p className="text-sm text-neutral-300 mt-1">{photo.description}</p></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        {selectedPhoto && <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-fade-in" onClick={() => setSelectedPhoto(null)}><div className="absolute inset-0 bg-black/90 backdrop-blur-md" /><div className="relative max-w-3xl w-full animate-scale-in" onClick={e => e.stopPropagation()}><button onClick={() => setSelectedPhoto(null)} className="absolute -top-12 right-0 text-white hover:text-red-400 transition-colors flex items-center gap-2"><span className="text-sm">Close</span><X size={24} /></button><div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-neutral-900">{selectedPhoto.imageUrl && <img src={selectedPhoto.imageUrl} alt={selectedPhoto.title} className="w-full h-full object-contain" />}</div><div className="mt-4"><h3 className="text-xl font-semibold text-white">{selectedPhoto.title}</h3><p className="text-neutral-400 mt-1">{selectedPhoto.description}</p></div></div></div>}
+      </section>
+    );
+  }
+
+  // ==================== NBA HIGHLIGHTS ====================
+  function VideoCard({ video, onClick, delay, badge, badgeColor }) {
+    return (<div className="reveal group cursor-pointer" style={{ transitionDelay: `${delay}s` }} onClick={onClick}><div className="relative aspect-video rounded-2xl overflow-hidden glass-card glass-card-hover"><div className="absolute inset-0">{video.thumbnail ? <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" /> : <div className="w-full h-full image-placeholder" />}</div><div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" /><div className={`absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-bold text-white ${badgeColor}`}>{badge}</div><div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"><div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-red-600/90 flex items-center justify-center backdrop-blur-sm scale-90 group-hover:scale-100 transition-transform duration-300"><Play className="text-white ml-1" size={24} fill="white" /></div></div><div className="absolute bottom-0 left-0 right-0 p-4"><h3 className="font-semibold text-white line-clamp-2 text-sm">{video.title}</h3><p className="text-xs text-neutral-300 mt-1 line-clamp-1">{video.description}</p></div></div></div>);
+  }
+  function VideoModal({ video, onClose }) {
+    const videoId = video.url.match(/(?:\?v=|\/)([\w-]{11})/)?.[1];
+    return (<div className="fixed inset-0 z-[60] flex items-center justify-center p-4 animate-fade-in" onClick={onClose}><div className="absolute inset-0 bg-black/90 backdrop-blur-md" /><div className="relative w-full max-w-5xl animate-scale-in" onClick={e => e.stopPropagation()}><button onClick={onClose} className="absolute -top-12 right-0 text-white hover:text-red-400 transition-colors flex items-center gap-2"><span className="text-sm">Close</span><X size={24} /></button><div className="relative aspect-video rounded-2xl overflow-hidden bg-black shadow-2xl">{videoId && <iframe src={`https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`} title={video.title} className="w-full h-full" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />}</div><div className="mt-4 flex items-start justify-between gap-4"><div><h3 className="text-lg font-semibold text-white">{video.title}</h3><p className="text-sm text-neutral-400 mt-1">{video.description}</p></div><a href={video.url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 flex items-center gap-2 text-sm text-neutral-300 hover:text-red-400 transition-colors">Open on YouTube<ExternalLink size={16} /></a></div></div></div>);
+  }
+  function NBAHighlights() {
+    const nbaRef = useReveal(); const avdijaRef = useReveal(); const [selectedVideo, setSelectedVideo] = useState(null);
+    return (
+      <>
+        <section id="nba" ref={nbaRef} className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-neutral-950 via-neutral-900/50 to-neutral-950">
+          <div className="max-w-7xl mx-auto">
+            <div className="reveal text-center mb-16"><p className="text-sm font-semibold text-red-400 uppercase tracking-widest mb-3">Weekly Roundup</p><h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">NBA Weekly Highlights</h2><p className="text-neutral-400 max-w-2xl mx-auto">Catch up on the best moments from around the league each week. Click any video to watch it right here.</p><div className="w-20 h-1 bg-gradient-to-r from-red-600 to-orange-400 mx-auto rounded-full mt-4" /></div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">{nbaWeeklyVideos.map((video, index) => <VideoCard key={video.id} video={video} onClick={() => setSelectedVideo(video)} delay={index * 0.08} badge="NBA" badgeColor="bg-blue-600" />)}</div>
+          </div>
+        </section>
+        <section id="avdija" ref={avdijaRef} className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-red-600/5 rounded-full blur-3xl" /><div className="absolute bottom-0 left-0 w-72 h-72 bg-orange-500/5 rounded-full blur-3xl" />
+          <div className="relative max-w-7xl mx-auto">
+            <div className="reveal text-center mb-16"><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-600/10 border border-red-600/30 mb-4"><span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" /><span className="text-sm font-medium text-red-400">Special Feature</span></div><h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">Deni Avdija <span className="gradient-text">Highlights</span></h2><p className="text-neutral-400 max-w-2xl mx-auto">A dedicated collection of the best Deni Avdija moments — from his breakout performances to season-high scoring nights. The pride of Israeli basketball in the NBA.</p><div className="w-20 h-1 bg-gradient-to-r from-red-600 to-orange-400 mx-auto rounded-full mt-4" /></div>
+            <AvdijaStats />
+            <div className="reveal grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">{deniAvdijaVideos.map((video, index) => <VideoCard key={video.id} video={video} onClick={() => setSelectedVideo(video)} delay={index * 0.1} badge="Avdija" badgeColor="bg-red-600" />)}</div>
+          </div>
+        </section>
+        {selectedVideo && <VideoModal video={selectedVideo} onClose={() => setSelectedVideo(null)} />}
+      </>
+    );
+  }
+
+  // ==================== CONTACT ====================
+  const contactIconMap = { linkedin: <Linkedin size={22} />, github: <Github size={22} />, mail: <Mail size={22} /> };
+  function Contact() {
+    const ref = useReveal();
+    return (
+      <section id="contact" ref={ref} className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-red-600/5 rounded-full blur-3xl" />
+        <div className="relative max-w-5xl mx-auto">
+          <div className="reveal text-center mb-16"><p className="text-sm font-semibold text-red-400 uppercase tracking-widest mb-3">Let's Connect</p><h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">Find Me Online</h2><p className="text-neutral-400 max-w-2xl mx-auto">Whether you want to talk basketball, collaborate on a project, or just say hi — I'm always up for a conversation.</p><div className="w-20 h-1 bg-gradient-to-r from-red-600 to-orange-400 mx-auto rounded-full mt-4" /></div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6 mb-16">
+            {socialLinks.map((social, index) => { const hasLink = social.url.length > 0; const Wrapper = hasLink ? 'a' : 'div'; return (
+              <Wrapper key={social.name} {...(hasLink ? { href: social.url, target: '_blank', rel: 'noopener noreferrer' } : {})} className="reveal group" style={{ transitionDelay: `${index * 0.08}s` }}>
+                <div className="glass-card glass-card-hover rounded-2xl p-6 text-center h-full"><div className="flex justify-center text-red-400 mb-3 group-hover:scale-110 transition-transform duration-300">{contactIconMap[social.icon]}</div><h3 className="font-semibold text-white text-sm sm:text-base">{social.name}</h3><p className="text-xs text-neutral-500 mt-1">{hasLink ? social.handle : 'Link coming soon'}</p>{hasLink && <div className="flex justify-center mt-2 text-neutral-500 group-hover:text-red-400 transition-colors"><ExternalLink size={14} /></div>}</div>
+              </Wrapper>
+            ); })}
+          </div>
+        </div>
+        <footer className="relative max-w-7xl mx-auto mt-24 pt-8 border-t border-white/5"><div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-neutral-500"><p>&copy; {new Date().getFullYear()} {personalInfo.name}. All rights reserved.</p><p className="flex items-center gap-1.5">Built with <Heart size={14} className="text-red-500 fill-red-500" /> & a love for basketball</p></div></footer>
+      </section>
+    );
+  }
+
+  // ==================== LOGIC LAB ====================
+  function TabButton({ active, onClick, icon, label }) {
+    return <button onClick={onClick} className={`flex items-center gap-2 px-5 sm:px-8 py-2.5 rounded-lg text-sm font-semibold transition-all duration-300 ${active ? 'bg-gradient-to-r from-teal-600 to-cyan-600 text-white shadow-lg shadow-teal-600/20' : 'text-neutral-400 hover:text-white'}`}>{icon}{label}</button>;
+  }
+  function Playground() {
+    const [inputCount, setInputCount] = useState(2); const labels = ['A', 'B', 'C', 'D'].slice(0, inputCount);
+    return (
+      <div className="reveal animate-fade-in">
+        <div className="glass-card rounded-2xl p-5 sm:p-6 mb-6"><div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"><div><h3 className="text-xl font-bold text-white flex items-center gap-2"><Gamepad2 size={20} className="text-teal-400" />Circuit Playground</h3><p className="text-sm text-neutral-400 mt-1">Add gates, wire them together, toggle inputs — watch the outputs change live.</p></div><div className="flex items-center gap-3"><span className="text-xs text-neutral-500">Inputs:</span><div className="flex gap-1">{[2, 3, 4].map(n => <button key={n} onClick={() => setInputCount(n)} className={`w-9 h-9 rounded-lg text-sm font-bold transition-all ${inputCount === n ? 'bg-teal-600 text-white' : 'glass-card text-neutral-400 hover:text-white'}`}>{n}</button>)}</div></div></div></div>
+        <CircuitBuilder inputLabels={labels} showTruthTable={true} />
+        <div className="glass-card rounded-xl p-4 mt-6"><div className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-3">Gate Reference</div><div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-3">{['AND', 'OR', 'NOT', 'NAND', 'NOR', 'XOR', 'XNOR'].map(gt => { const descMap = { AND: '1 when both are 1', OR: '1 when any is 1', NOT: 'Inverts input', NAND: 'NOT(AND)', NOR: 'NOT(OR)', XOR: '1 when differ', XNOR: '1 when equal' }; return <div key={gt} className="flex flex-col items-center p-2 rounded-lg bg-neutral-800/40"><div className="scale-75 origin-center"><GateShape type={gt} value={0} /></div><div className="text-xs font-semibold text-white mt-1">{gt}</div><div className="text-[10px] text-neutral-500 mt-0.5">{descMap[gt]}</div></div>; })}</div></div>
+      </div>
+    );
+  }
+  function generateUserTable(data, challenge) {
+    const n = data.inputIds.length; const rows = [];
+    for (let i = 0; i < (1 << n); i++) { const inputValues = []; for (let j = n - 1; j >= 0; j--) inputValues.push((i >> j) & 1); const testNodes = data.circuit.nodes.map(node => { if (node.type === 'input') { const idx = data.inputIds.indexOf(node.id); if (idx >= 0) return { ...node, value: inputValues[idx] }; } return { ...node, value: 0 }; }); const evaluated = evaluateCircuit({ nodes: testNodes, wires: data.circuit.wires }); const outputValues = data.outputIds.map(oid => evaluated.find(nn => nn.id === oid)?.value ?? 0); if (challenge.outputLabel.includes(',')) { const combined = outputValues.reduce((acc, v, idx) => acc + (v << (outputValues.length - 1 - idx)), 0); rows.push({ inputs: inputValues, outputs: [combined] }); } else { rows.push({ inputs: inputValues, outputs: [outputValues[0] ?? 0] }); } }
+    return rows;
+  }
+  function TestZone() {
+    const [selectedChallenge, setSelectedChallenge] = useState(null);
+    const [circuitData, setCircuitData] = useState(null); const [result, setResult] = useState(null);
+    const [showHint, setShowHint] = useState(false); const [showConceptAnswer, setShowConceptAnswer] = useState(false);
+    const [solved, setSolved] = useState(new Set());
+    const handleCircuitChange = useCallback((circuit, inputIds, outputIds) => { setCircuitData({ circuit, inputIds, outputIds }); }, []);
+    const checkSolution = () => { if (!selectedChallenge || !circuitData) return; if (circuitData.outputIds.length === 0) { setResult('wrong'); return; } const userTable = generateUserTable(circuitData, selectedChallenge); const targetTable = targetTruthTable(selectedChallenge.inputLabels.length, selectedChallenge.targetFn); const isCorrect = compareTruthTables(userTable, targetTable); setResult(isCorrect ? 'correct' : 'wrong'); if (isCorrect) setSolved(prev => new Set(prev).add(selectedChallenge.id)); };
+    const selectChallenge = ch => { setSelectedChallenge(ch); setResult(null); setShowHint(false); setShowConceptAnswer(false); };
+    if (selectedChallenge?.conceptual) { const conceptual = selectedChallenge.conceptual; return (
+      <div className="reveal animate-fade-in"><div className="glass-card rounded-2xl p-5 sm:p-8 max-w-4xl mx-auto"><div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-8"><div><div className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/15 text-red-400 mb-3">Hard · Design Question</div><h3 className="text-2xl font-bold text-white">{selectedChallenge.title}</h3></div><button onClick={() => { setSelectedChallenge(null); setShowConceptAnswer(false); }} className="flex items-center gap-2 px-4 py-2 rounded-lg glass-card text-neutral-300 hover:text-white text-sm font-medium transition-all flex-shrink-0"><RotateCcw size={16} />Back to challenges</button></div><div className="rounded-xl border border-teal-500/20 bg-teal-500/5 p-5 sm:p-6"><p className="text-xs uppercase tracking-wider font-semibold text-teal-400 mb-3">Question</p><p className="text-base sm:text-lg leading-relaxed text-white">{conceptual.question}</p></div><FullAdderBuilder /><div className="flex flex-wrap items-center gap-3 mt-6"><button onClick={() => setShowConceptAnswer(!showConceptAnswer)} className="flex items-center gap-2 px-5 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold hover:scale-105 transition-all">{showConceptAnswer ? 'Hide Answer' : 'Reveal Answer'}</button><span className="text-sm text-neutral-500">Minimum hardware design challenge</span></div>{showConceptAnswer && <div className="mt-5 rounded-xl border-l-4 border-teal-500 bg-teal-500/10 p-5 animate-fade-in"><p className="text-xl font-bold text-teal-300">{conceptual.answer}</p><p className="text-sm leading-relaxed text-neutral-300 mt-2">{conceptual.explanation}</p></div>}</div></div>
+    ); }
+    return (
+      <div className="reveal animate-fade-in">
+        {!selectedChallenge ? (
+          <><div className="text-center mb-6"><p className="text-neutral-400 text-sm">Pick a challenge — each one tests your ability to build a specific logic function from gates.</p></div><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{challenges.map((ch, i) => { const isSolved = solved.has(ch.id); return (
+            <button key={ch.id} onClick={() => selectChallenge(ch)} className="reveal group text-left glass-card glass-card-hover rounded-2xl p-5 relative overflow-hidden" style={{ transitionDelay: `${i * 0.08}s` }}>
+              {isSolved && <div className="absolute top-3 right-3 w-7 h-7 rounded-full bg-teal-500/20 border border-teal-500/40 flex items-center justify-center"><CheckCircle2 size={16} className="text-teal-400" /></div>}
+              <div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium mb-3 ${ch.difficulty === 'Easy' ? 'bg-green-500/15 text-green-400' : ch.difficulty === 'Medium' ? 'bg-amber-500/15 text-amber-400' : 'bg-red-500/15 text-red-400'}`}>{ch.difficulty}</div>
+              <h4 className="font-bold text-white text-base mb-2 group-hover:text-teal-400 transition-colors">{ch.title}</h4><p className="text-xs text-neutral-400 line-clamp-2">{ch.description}</p>
+              <div className="flex items-center gap-3 mt-4 text-xs text-neutral-500">{ch.conceptual ? <span>Design question</span> : <><span>{ch.inputLabels.length} inputs</span><span>·</span><span>Max {ch.maxGates} gates</span><span>·</span><span>{ch.allowedGates.length === 1 ? `${ch.allowedGates[0]} only` : 'Any gate'}</span></>}</div>
+              <div className="flex items-center gap-1 mt-3 text-teal-400 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Start challenge <ChevronRight size={14} /></div>
+            </button> ); })}</div></>
+        ) : (
+          <div>
+            <div className="glass-card rounded-2xl p-5 sm:p-6 mb-6"><div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4"><div className="flex-1"><div className="flex items-center gap-3 mb-2"><div className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${selectedChallenge.difficulty === 'Easy' ? 'bg-green-500/15 text-green-400' : selectedChallenge.difficulty === 'Medium' ? 'bg-amber-500/15 text-amber-400' : 'bg-red-500/15 text-red-400'}`}>{selectedChallenge.difficulty}</div>{solved.has(selectedChallenge.id) && <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-teal-500/15 text-teal-400"><Trophy size={12} /> Solved</span>}</div><h3 className="text-xl font-bold text-white mb-2">{selectedChallenge.title}</h3><p className="text-sm text-neutral-300">{selectedChallenge.description}</p></div><button onClick={() => { setSelectedChallenge(null); setResult(null); }} className="flex items-center gap-2 px-4 py-2 rounded-lg glass-card text-neutral-300 hover:text-white text-sm font-medium transition-all flex-shrink-0"><RotateCcw size={16} />Back to challenges</button></div><div className="flex flex-wrap items-center gap-4 mt-4 pt-4 border-t border-white/5 text-xs text-neutral-500"><span>Inputs: <span className="text-blue-400 font-mono">{selectedChallenge.inputLabels.join(', ')}</span></span><span>Output: <span className="text-amber-400 font-mono">{selectedChallenge.outputLabel}</span></span><span>Max gates: <span className="text-white font-mono">{selectedChallenge.maxGates}</span></span><span>Allowed: <span className="text-teal-400 font-mono">{selectedChallenge.allowedGates.length === 1 ? selectedChallenge.allowedGates[0] + ' only' : 'All gates'}</span></span></div></div>
+            <CircuitBuilder inputLabels={selectedChallenge.inputLabels} allowedGates={selectedChallenge.allowedGates} maxGates={selectedChallenge.maxGates} onCircuitChange={handleCircuitChange} showTruthTable={true} compact />
+            <div className="flex flex-wrap items-center gap-3 mt-6"><button onClick={checkSolution} className="flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold shadow-lg shadow-teal-600/20 hover:shadow-teal-600/40 hover:scale-105 transition-all"><ClipboardCheck size={18} />Check Solution</button><button onClick={() => setShowHint(!showHint)} className="flex items-center gap-2 px-5 py-3 rounded-xl glass-card glass-card-hover text-neutral-300 hover:text-amber-400 text-sm font-medium transition-all"><Lightbulb size={18} />{showHint ? 'Hide Hint' : 'Show Hint'}</button></div>
+            {showHint && <div className="glass-card rounded-xl p-4 mt-4 border-l-4 border-amber-500/50 animate-fade-in"><div className="flex items-start gap-3"><Lightbulb size={18} className="text-amber-400 flex-shrink-0 mt-0.5" /><p className="text-sm text-neutral-300">{selectedChallenge.hint}</p></div></div>}
+            {result === 'correct' && <div className="glass-card rounded-xl p-6 mt-4 border-l-4 border-teal-500 animate-fade-in"><div className="flex items-center gap-3"><CheckCircle2 size={28} className="text-teal-400" /><div><h4 className="text-lg font-bold text-teal-400">Correct! Circuit verified.</h4><p className="text-sm text-neutral-400 mt-1">Your circuit matches the target truth table. Try another challenge!</p></div></div></div>}
+            {result === 'wrong' && <div className="glass-card rounded-xl p-6 mt-4 border-l-4 border-red-500 animate-fade-in"><div className="flex items-center gap-3"><XCircle size={28} className="text-red-400" /><div><h4 className="text-lg font-bold text-red-400">Not quite right.</h4><p className="text-sm text-neutral-400 mt-1">{circuitData?.outputIds.length === 0 ? 'You need at least one output gate (a gate with no wires going out from it).' : 'Compare your truth table with the expected output. Check the hint if you\'re stuck!'}</p></div></div></div>}
+            <div className="glass-card rounded-xl p-4 mt-6"><div className="text-xs font-semibold text-neutral-400 uppercase tracking-wider mb-2">Target Output</div><table className="text-sm"><thead><tr className="border-b border-white/10">{selectedChallenge.inputLabels.map(label => <th key={label} className="px-3 py-1.5 text-blue-400 font-semibold text-center">{label}</th>)}<th className="px-2 text-neutral-600">|</th><th className="px-3 py-1.5 text-amber-400 font-semibold text-center">{selectedChallenge.outputLabel}</th></tr></thead><tbody>{targetTruthTable(selectedChallenge.inputLabels.length, selectedChallenge.targetFn).map((row, i) => <tr key={i} className="border-b border-white/5">{row.inputs.map((v, j) => <td key={j} className={`px-3 py-1.5 text-center font-mono ${v ? 'text-teal-400' : 'text-neutral-500'}`}>{v}</td>)}<td className="px-2 text-neutral-700">|</td><td className={`px-3 py-1.5 text-center font-mono font-bold ${row.outputs[0] ? 'text-amber-400' : 'text-neutral-600'}`}>{row.outputs[0]}</td></tr>)}</tbody></table></div>
+          </div>
+        )}
+      </div>
+    );
+  }
+  function LogicLab() {
+    const ref = useReveal(); const [tab, setTab] = useState('playground');
+    return (
+      <section id="logiclab" ref={ref} className="relative py-24 sm:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="absolute top-1/4 right-0 w-96 h-96 bg-teal-600/5 rounded-full blur-3xl" /><div className="absolute bottom-1/4 left-0 w-72 h-72 bg-cyan-500/5 rounded-full blur-3xl" />
+        <div className="relative max-w-7xl mx-auto">
+          <div className="reveal text-center mb-12"><div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-teal-600/10 border border-teal-600/30 mb-4"><span className="w-2 h-2 bg-teal-500 rounded-full animate-pulse" /><span className="text-sm font-medium text-teal-400">Interactive Logic Design</span></div><h2 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4">Logic Gate <span className="text-teal-400">Lab</span></h2><p className="text-neutral-400 max-w-2xl mx-auto">Build circuits with logic gates, toggle inputs, and see outputs in real time. Then test your skills in the challenge zone — all running live in your browser.</p><div className="w-20 h-1 bg-gradient-to-r from-teal-600 to-cyan-400 mx-auto rounded-full mt-4" /></div>
+          <div className="reveal flex justify-center mb-8"><div className="inline-flex rounded-xl glass-card p-1.5 gap-1"><TabButton active={tab === 'playground'} onClick={() => setTab('playground')} icon={<Gamepad2 size={18} />} label="Playground" /><TabButton active={tab === 'testzone'} onClick={() => setTab('testzone')} icon={<ClipboardCheck size={18} />} label="Test Zone" /></div></div>
+          {tab === 'playground' ? <Playground /> : <TestZone />}
+        </div>
+      </section>
+    );
+  }
+
+  // ==================== APP ====================
+  function App() {
+    return (
+      <div className="relative min-h-screen bg-neutral-950 text-neutral-100 overflow-x-hidden">
+        <div className="noise-overlay" />
+        <Navbar />
+        <main className="relative z-10">
+          <Hero />
+          <About />
+          <LogicLab />
+          <NBAHighlights />
+          <Gallery />
+          <Contact />
+        </main>
+      </div>
+    );
+  }
+
+  const root = createRoot(document.getElementById('root'));
+  root.render(<App />);
+  </script>
+</body>
+</html>
